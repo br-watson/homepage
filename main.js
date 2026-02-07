@@ -66,3 +66,13 @@ window.addEventListener("resize", () => {
         introResizeRaf = 0;
     });
 });
+let lastTouchEnd = 0;
+document.addEventListener("touchend", (event) => {
+    const now = performance.now();
+    if (event.touches.length > 0)
+        return;
+    if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+    }
+    lastTouchEnd = now;
+}, { passive: false });
