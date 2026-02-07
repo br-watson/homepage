@@ -18,6 +18,7 @@ const title = document.querySelector(".title");
 const ps1 = document.querySelector(".ps1");
 const quickLinks = document.getElementById("quickLinks");
 const quickLinksList = document.getElementById("quickLinksList");
+const prefersCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
 const SHELL_ID = "brad@portfolio";
 
@@ -55,16 +56,20 @@ setupQuickLinks({
 	profile: PROFILE,
 	aliases: ["cv", "github", "linkedin"],
 	onRunCommand: async (command) => {
+		if (prefersCoarsePointer && document.activeElement === input) {
+			input.blur();
+		}
 		terminal.addHistory(command);
 		await terminal.run(command);
 		renderer.scrollToBottom();
-		prompt.focus();
+		// Avoid iOS Safari auto-zoom/keyboard pop on quick-link taps.
+		if (!prefersCoarsePointer) prompt.focus();
 	},
 });
 
 applyInitialTheme();
 terminal.boot();
-prompt.focus();
+if (!prefersCoarsePointer) prompt.focus();
 
 let introResizeRaf = 0;
 window.addEventListener("resize", () => {
@@ -75,16 +80,16 @@ window.addEventListener("resize", () => {
 	});
 });
 
-// let lastTouchEnd = 0;
-// document.addEventListener(
-// 	"touchend",
-// 	(event) => {
-// 		const now = performance.now();
-// 		if (event.touches.length > 0) return;
-// 		if (now - lastTouchEnd <= 300) {
-// 			event.preventDefault();
-// 		}
-// 		lastTouchEnd = now;
-// 	},
-// 	{ passive: false },
-// );
+let lastTouchEnd = 0;
+document.addEventListener(
+	"touchend",
+	(event) => {
+		const now = performance.now();
+		if (event.touches.length > 0) return;
+		if (now - lastTouchEnd <= 300) {
+			event.preventDefault();
+		}
+		lastTouchEnd = now;
+	},
+	{ passive: false },
+);

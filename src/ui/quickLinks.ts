@@ -60,6 +60,10 @@ export function setupQuickLinks({
 		const command = button.dataset.command?.trim();
 		if (!command) return;
 
+		if (event.detail > 0) {
+			button.blur();
+		}
+
 		await onRunCommand(command);
 	});
 
