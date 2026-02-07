@@ -72,7 +72,7 @@ body {
 
 .topbar {
 	display: grid;
-	grid-template-columns: auto 1fr auto;
+	grid-template-columns: auto minmax(0, 1fr) auto;
 	gap: 12px;
 	align-items: center;
 	padding: 12px 14px;
@@ -103,6 +103,10 @@ body {
 .title {
 	color: var(--muted);
 	font-size: 13px;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .hint {
 	color: var(--muted);
@@ -122,6 +126,7 @@ body {
 	display: flex;
 	align-items: center;
 	gap: 10px;
+	min-width: 0;
 }
 
 .theme-toggle {
@@ -186,6 +191,7 @@ body {
 	padding: 14px;
 	overflow: auto;
 	line-height: 1.45;
+	-webkit-overflow-scrolling: touch;
 }
 
 .block {
@@ -232,6 +238,7 @@ a:hover {
 	border-top: 1px solid rgba(255, 255, 255, 0.08);
 	background: rgba(0, 0, 0, 0.14);
 	min-width: 0;
+	overflow: hidden;
 }
 
 .quick-links[hidden] {
@@ -253,9 +260,12 @@ a:hover {
 	min-width: 0;
 	overflow-x: auto;
 	overflow-y: hidden;
+	padding: 1px 12px 1px 2px;
 	scrollbar-width: thin;
 	scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 	-webkit-overflow-scrolling: touch;
+	scroll-padding-inline: 12px;
+	touch-action: pan-x;
 }
 
 .quick-links-list::-webkit-scrollbar {
@@ -327,20 +337,43 @@ a:hover {
 	padding: 12px 14px;
 	border-top: 1px solid rgba(255, 255, 255, 0.08);
 	background: rgba(0, 0, 0, 0.18);
+	overflow-x: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+	-webkit-overflow-scrolling: touch;
+}
+
+.prompt::-webkit-scrollbar {
+	height: 8px;
+}
+
+.prompt::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.prompt::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.18);
+	border-radius: 999px;
 }
 
 .ps1 {
 	color: var(--accent);
+	flex: 0 0 auto;
 }
 .cwd {
 	color: var(--muted);
+	flex: 0 0 auto;
 }
 .sep {
 	color: var(--muted);
+	flex: 0 0 auto;
 }
 
 #input {
-	flex: 1;
+	flex: 1 0 16ch;
+	min-width: 16ch;
 	background: transparent;
 	border: none;
 	outline: none;
@@ -411,5 +444,65 @@ a:hover {
 			transform: none;
 			opacity: 1;
 		}
+	}
+}
+
+@media (max-width: 720px) {
+	body {
+		padding: 12px;
+	}
+
+	.topbar {
+		gap: 8px;
+		padding: 10px 12px;
+	}
+
+	.hint {
+		display: none;
+	}
+
+	.theme-toggle {
+		font-size: 11px;
+		padding: 3px 8px;
+	}
+
+	.screen {
+		padding: 12px;
+	}
+
+	.quick-links {
+		gap: 8px;
+		padding: 6px 12px;
+	}
+
+	.quick-links-label {
+		font-size: 10px;
+	}
+
+	.prompt {
+		padding: 10px 12px;
+	}
+
+	.block {
+		width: max-content;
+		min-width: 100%;
+	}
+
+	.block .line {
+		white-space: pre;
+		word-break: normal;
+	}
+}
+
+@media (max-width: 520px) {
+	.prompt .ps1,
+	.prompt .cwd,
+	.prompt .sep:first-of-type {
+		display: none;
+	}
+
+	#input {
+		flex-basis: 20ch;
+		min-width: 20ch;
 	}
 }
