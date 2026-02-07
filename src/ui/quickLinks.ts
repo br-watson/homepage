@@ -6,7 +6,7 @@ interface QuickLinksOptions {
 	list: HTMLElement | null;
 	profile: Profile;
 	onRunCommand: (command: string) => Promise<void> | void;
-	aliases?: readonly string[];
+	aliases: readonly string[];
 }
 
 export function setupQuickLinks({

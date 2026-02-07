@@ -157,7 +157,7 @@ export function createTerminal({
 		return listHomeFs(fs);
 	}
 
-	function resolveHomeItem(name) {
+	function resolveHomeItem(name: string) {
 		return resolveHomeItemFs(fs, name);
 	}
 
@@ -326,10 +326,16 @@ export function createTerminal({
 		const candidates = command.complete(buildContext(), req) || [];
 
 		return (
-			applyMatches(`arg:${cmdName}`, current, prefix, candidates, (choice) => {
-				const baseTokens = endsWithWhitespace ? tokens : tokens.slice(0, -1);
-				return [...baseTokens, quoteIfNeeded(choice)].join(" ");
-			}) ?? current
+			applyMatches(
+				`arg:${cmdName}`,
+				current,
+				prefix,
+				candidates,
+				(choice: string) => {
+					const baseTokens = endsWithWhitespace ? tokens : tokens.slice(0, -1);
+					return [...baseTokens, quoteIfNeeded(choice)].join(" ");
+				},
+			) ?? current
 		);
 	}
 
@@ -354,7 +360,13 @@ export function createTerminal({
 		return matches.join("\0");
 	}
 
-	function applyMatches(kind, current, prefix, matches, buildValue) {
+	function applyMatches(
+		kind: string,
+		current: string,
+		prefix: string,
+		matches: string[],
+		buildValue: (choice: string) => string,
+	) {
 		if (matches.length === 0) {
 			state.completion = null;
 			return null;
@@ -405,7 +417,7 @@ export function createTerminal({
 		}
 
 		if (state.completion?.phase === "armed") {
-			const segs = [];
+			const segs: Segment[] = [];
 			matches.forEach((m, i) => {
 				if (i) segs.push(t("   "));
 				segs.push(s("accent", m));

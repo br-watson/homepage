@@ -8,7 +8,11 @@ export interface Renderer {
 	getColumns: () => number;
 }
 
-export function createDomRenderer({ screen }): Renderer {
+export function createDomRenderer({
+	screen,
+}: {
+	screen: HTMLElement;
+}): Renderer {
 	function measureCharacterWidth(): number {
 		const probe = document.createElement("span");
 		probe.className = "line ok";

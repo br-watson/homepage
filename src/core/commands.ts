@@ -183,8 +183,10 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 			const alias = buildOpenAliasMap(ctx.profile);
 			if (alias.has(target)) {
 				const url = alias.get(target);
-				ctx.printLine([t("Opening: "), l(url)], "muted");
-				ctx.openUrl(url);
+				if (url) {
+					ctx.printLine([t("Opening: "), l(url)], "muted");
+					ctx.openUrl(url);
+				}
 				return;
 			}
 

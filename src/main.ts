@@ -32,6 +32,10 @@ const { controller: themeController, applyInitialTheme } =
 	});
 const openUrl = createSafeOpener(toast);
 
+if (!screen) {
+	throw new Error("Screen element not found.");
+}
+
 const renderer = createDomRenderer({ screen });
 const { commands } = createCommandRegistry({ profile: PROFILE });
 const terminal = createTerminal({
