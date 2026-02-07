@@ -50,6 +50,10 @@ export function buildFs(profile) {
                     type: "link",
                     href: profile.filePaths.dissertation,
                 },
+                "todo.md": {
+                    type: "file",
+                    content: profile.todo.map((t) => `- [ ] ${t}`).join("\n"),
+                },
             },
         },
     };
