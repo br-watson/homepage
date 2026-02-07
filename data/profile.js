@@ -67,5 +67,8 @@ export const PROFILE = {
         "Add way for mobile to access command history and autocomplete",
         "Make banner nicer on mobile",
         "Write README",
+        "Make sure accessilbity is good (aria tags, screen reader support, keyboard navigation etc.)",
+        "Make sure performance is good",
+        "Add my actual email",
     ],
 };
