@@ -101,10 +101,25 @@ export function createTerminal({
 	}
 
 	function maxLineLength(lines: string[]) {
-		return lines.reduce(
-			(max, line) => Math.max(max, Array.from(line).length),
-			0,
-		);
+		return lines.reduce((max, line) => Math.max(max, line.length), 0);
+	}
+
+	function truncateText(value: string, maxLength: number) {
+		if (value.length <= maxLength) return value;
+		if (maxLength <= 1) return "…";
+		return `${value.slice(0, maxLength - 1)}…`;
+	}
+
+	function centerTextParts(value: string, width: number) {
+		const text = truncateText(value, width);
+		const padding = Math.max(0, width - text.length);
+		const left = Math.floor(padding / 2);
+		const right = padding - left;
+		return {
+			leftPad: " ".repeat(left),
+			text,
+			rightPad: " ".repeat(right),
+		};
 	}
 
 	function printBanner() {
@@ -122,18 +137,39 @@ export function createTerminal({
 	}
 
 	function printBoxBanner() {
-		const name = String(profile.name);
-		const role = String(profile.role);
+		const name = String(profile.name).trim() || "Portfolio";
+		const role = String(profile.role).trim() || "Software Engineer";
+		const availableColumns = renderer.getColumns();
 
-		const contentWidth = Math.max(name.length, role.length, 10);
-		const innerWidth = clamp(contentWidth + 2, 30, 54);
+		const maxInnerWidth = clamp(availableColumns - 6, 10, 54);
+		const minInnerWidth = Math.min(20, maxInnerWidth);
+		const contentWidth = Math.max(name.length, role.length, minInnerWidth - 4);
+		const innerWidth = clamp(contentWidth + 4, minInnerWidth, maxInnerWidth);
 
-		const top = `┌${"─".repeat(innerWidth + 2)}┐`;
-		const bottom = `└${"─".repeat(innerWidth + 2)}┘`;
-		const line = (text: string) => `│  ${text.padEnd(innerWidth, " ")}│`;
+		const top = `╭${"─".repeat(innerWidth + 2)}╮`;
+		const divider = `├${"─".repeat(innerWidth + 2)}┤`;
+		const bottom = `╰${"─".repeat(innerWidth + 2)}╯`;
 
-		const banner = [top, line(name), line(role), bottom].join("\n");
-		printPre(banner, "ok");
+		const row = (text: string, withNewline = true): Segment[] => {
+			const centered = centerTextParts(text, innerWidth);
+			return [
+				s("banner-border", "│ "),
+				s("banner-border", centered.leftPad),
+				s("banner-text", centered.text),
+				s("banner-border", centered.rightPad),
+				s("banner-border", withNewline ? " │\n" : " │"),
+			];
+		};
+
+		const banner: Segment[] = [
+			s("banner-border", `${top}\n`),
+			...row(name),
+			s("banner-border", `${divider}\n`),
+			...row(role),
+			s("banner-border", bottom),
+		];
+
+		printLine(banner, "banner");
 	}
 
 	function clamp(n: number, min: number, max: number) {
