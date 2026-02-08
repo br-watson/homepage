@@ -141,12 +141,12 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 					const entries = Object.entries(item.items).flatMap(([key, href]) => [
 						t(`${key}: `.padEnd(10, " ")),
 						l(href, key),
-						t(padOnly(key, 10)),
+						t(padOnly(key, 8)),
 						t(" (or run "),
 						s("accent", `open ${key}`),
 						t(")\n"),
 					]);
-					ctx.printLine(entries, "muted");
+					ctx.printLine(entries, "muted wrap-desktop");
 					break;
 				}
 				case "projects": {
@@ -161,7 +161,7 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 							: t(""),
 						t("\n"),
 					]);
-					ctx.printLine(entries, "muted");
+					ctx.printLine(entries, "muted wrap-desktop");
 					break;
 				}
 				case "education": {
@@ -182,7 +182,7 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 							: t(""),
 						t("\n"),
 					]);
-					ctx.printLine(entries, "muted");
+					ctx.printLine(entries, "muted wrap-desktop");
 					break;
 				}
 				default: {

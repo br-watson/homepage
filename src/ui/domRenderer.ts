@@ -13,6 +13,10 @@ export function createDomRenderer({
 }: {
 	screen: HTMLElement;
 }): Renderer {
+	function hasClassToken(className: string, token: string): boolean {
+		return className.split(/\s+/).includes(token);
+	}
+
 	function measureCharacterWidth(): number {
 		const probe = document.createElement("span");
 		probe.className = "line ok";
@@ -78,6 +82,9 @@ export function createDomRenderer({
 	function printLine(segments: Segment[], className = "ok"): void {
 		const block = document.createElement("div");
 		block.className = "block";
+		if (hasClassToken(className, "wrap-desktop")) {
+			block.classList.add("wrap-desktop");
+		}
 
 		const line = document.createElement("div");
 		line.className = `line ${className}`;

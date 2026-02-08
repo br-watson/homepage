@@ -458,7 +458,7 @@ export function createTerminal({
 				if (i) segs.push(t("   "));
 				segs.push(s("accent", m));
 			});
-			printLine(segs, "muted");
+			printLine(segs, "muted wrap-desktop");
 			renderer.scrollToBottom();
 
 			state.completion.phase = "listed";
